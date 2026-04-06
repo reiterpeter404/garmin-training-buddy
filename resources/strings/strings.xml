@@ -2,4 +2,9 @@
     <string id="AppName">TrainingBuddy</string>
 
     <string id="prompt">Click the menu button</string>
+
+    <string id="next_lap">Next lap</string>
+    <string id="curr_step">Curr. step</string>
+    <string id="lap">Lap</string>
+    <string id="set">Set</string>
 </strings>
