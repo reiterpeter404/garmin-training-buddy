@@ -1,0 +1,76 @@
+# =========================
+# Garmin Connect IQ / Monkey C
+# =========================
+
+# Build output (SDK / monkeyc)
+bin/
+build/
+out/
+*.prg
+*.iq
+*.barrel
+*.debug.xml
+*.release.xml
+
+# Packaging / release artifacts
+dist/
+release/
+
+# Simulator & device artifacts
+simulator/
+*.fit
+
+# Logs & temp files
+*.log
+*.tmp
+*.bak
+*.swp
+*.cache
+
+# =========================
+# IDEs
+# =========================
+
+# Eclipse (Connect IQ Plugin Standard)
+.metadata/
+.classpath
+.project
+.settings/
+
+# Visual Studio Code
+.vscode/
+
+# JetBrains
+.idea/
+*.iml
+
+# =========================
+# CI / Tooling
+# =========================
+
+# Environment / secrets
+.env
+.env.*
+*.keystore
+*.jks
+
+# Monkey C dependency cache
+.monkeyc/
+
+# =========================
+# OS-specific
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Optional
+# =========================
+
+# Documentation build output
+docs/build/
+
+# Test output
+
+coverage/
+reports/
