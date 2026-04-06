@@ -1,21 +1,21 @@
 <layout id="MainLayout" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
     
     <!-- upper section -->
-    <label x="center" y="5" color="Graphics.COLOR_WHITE" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.prompt" />
-    <label x="center" y="5" color="Graphics.COLOR_WHITE" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.prompt" />
+    <label x="center" y="13%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.elapsed" />
+    <label x="center" y="20%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="23:16" />
     
     <!-- Mid section -->
-    <label x="30%" y="45%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.next_lap" />
-    <label x="30%" y="53%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="0:42" />
+    <label x="25%" y="40%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.next_lap" />
+    <label x="25%" y="48%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="0:42" />
 
-    <label x="70%" y="45%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.curr_step" />
-    <label x="70%" y="53%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="Pause" />
+    <label x="75%" y="40%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.curr_step" />
+    <label x="75%" y="48%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="Pause" />
 
     <!-- lower section -->
-    <label x="35%" y="73%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.lap" />
-    <label x="35%" y="80%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="2 / 3" />
+    <label x="35%" y="68%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.lap" />
+    <label x="35%" y="75%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="2 / 3" />
 
-    <label x="65%" y="73%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.set" />
-    <label x="65%" y="80%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="1 / 4" />
+    <label x="65%" y="68%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.set" />
+    <label x="65%" y="75%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="1 / 4" />
 
 </layout>
