@@ -5,11 +5,13 @@ import Toybox.WatchUi;
 const TIMER_INTERVAL = 100;
 const MS_TO_S = 1000.0;
 const TRAINING_INTERVAL_DURATION_IN_SECONDS = 3600;
+
 var selectedActivity;
 var trainingDurationInSeconds = 0.0;
 var trainingTimerCounter = 0;
 var activityRunning = false;
 var timer = new Timer.Timer();
+var currentStep = START;
 
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
 
