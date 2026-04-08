@@ -6,18 +6,22 @@ const TIMER_INTERVAL = 100;
 const MS_TO_S = 1000.0;
 const TRAINING_INTERVAL_DURATION_IN_SECONDS = 3600;
 
-var selectedActivity;
-var trainingDurationInSeconds = 0.0;
-var trainingTimerCounter = 0;
-var activityRunning = false;
-var timer = new Timer.Timer();
-var currentStep = START;
 
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
+    private var selectedActivity;
+    private var trainingDuration = [];
+    private var trainingTimerCounter = 0;
+    private var activityRunning = false;
+    private var timer = new Timer.Timer();
+    private var intervalTimer = new Timer.Timer();
+    private var currentStep = "WAITING";
 
-    public function initialize() {
-        selectedActivity = Activity.SPORT_TRAINING;
+    private var trainingBuddyView;
+
+    public function initialize(view) {
         BehaviorDelegate.initialize();
+        trainingBuddyView = view;
+        selectedActivity = Activity.SPORT_TRAINING;
     }
 
     public function onKey(keyEvent) {
@@ -60,11 +64,19 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      */
     public function timerCallback() {
         trainingTimerCounter += 1;
-        trainingDurationInSeconds = trainingTimerCounter * TIMER_INTERVAL / MS_TO_S;
+        trainingDuration = MathFunctions.counterToTimeArray( trainingTimerCounter , TIMER_INTERVAL );
 
-        System.println("Ticks : " + trainingTimerCounter + ", Seconds : " + trainingDurationInSeconds);
+        System.println("Ticks : " + trainingTimerCounter);
+        System.println(trainingDuration[0] + "h " + trainingDuration[1] + "m " + trainingDuration[2] + "s " + trainingDuration[3] + "ms "  );
 
-        WatchUi.requestUpdate();
+
+        if (trainingBuddyView != null) {
+            trainingBuddyView.updateTrainingDuration(
+                HelperFunctions.arrayToTimeString(trainingDuration)
+            );
+        } else {
+            System.println("View is null");
+        }
     }
 
     /**

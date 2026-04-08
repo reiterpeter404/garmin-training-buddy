@@ -18,7 +18,8 @@ class TrainingBuddyApp extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() as [Views] or [Views, InputDelegates] {
-        return [ new TrainingBuddyView(), new TrainingBuddyDelegate() ];
+        var appView = new TrainingBuddyView();
+        return [ appView, new TrainingBuddyDelegate(appView) ];
     }
 
 }
