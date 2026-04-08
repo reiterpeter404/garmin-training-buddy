@@ -2,20 +2,20 @@
     
     <!-- upper section -->
     <label x="center" y="13%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.elapsed" />
-    <label x="center" y="20%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="23:16" />
-    
+    <label x="center" y="20%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" id="TimerLabel" />
+
     <!-- Mid section -->
     <label x="25%" y="40%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.next_lap" />
-    <label x="25%" y="48%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="0:42" />
+    <label x="25%" y="48%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" id="IntervalTimer" />
 
     <label x="75%" y="40%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.curr_step" />
-    <label x="75%" y="48%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="Pause" />
+    <label x="75%" y="48%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" id="CurrentStep" />
 
     <!-- lower section -->
     <label x="35%" y="68%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.lap" />
-    <label x="35%" y="75%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="2 / 3" />
+    <label x="35%" y="75%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" id="LapCounter" />
 
     <label x="65%" y="68%" font="Graphics.FONT_XTINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="@Strings.set" />
-    <label x="65%" y="75%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" text="1 / 4" />
+    <label x="65%" y="75%" font="Graphics.FONT_TINY" justification="Graphics.TEXT_JUSTIFY_CENTER" id="SetCounter" />
 
 </layout>
