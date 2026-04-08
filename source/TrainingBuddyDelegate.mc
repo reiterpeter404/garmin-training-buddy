@@ -8,6 +8,7 @@ const TRAINING_INTERVAL_DURATION_IN_SECONDS = 180;
 
 
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
+    private var trainingBuddyView;
     private var selectedActivity;
     private var trainingTimerCounter = 0;
     private var activityRunning = false;
@@ -15,10 +16,13 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var intervalTimer = new Timer.Timer();
     private var currentStep = "WAITING";
     
-    var trainingDuration = Duration;
+    private var trainingDuration = Duration;
 
-    private var trainingBuddyView;
-
+    /**
+     * Construct a new object.
+     *
+     * @param view the reference to the UI
+     */
     public function initialize(view) {
         BehaviorDelegate.initialize();
         trainingBuddyView = view;
