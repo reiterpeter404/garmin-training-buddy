@@ -8,31 +8,32 @@ const TRAINING_INTERVAL_DURATION_IN_SECONDS = 180;
 
 
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
-    private var trainingBuddyView;
+    private var view;
     private var selectedActivity;
     private var trainingTimerCounter = 0;
     private var activityRunning = false;
     private var updateViewTimer = new Timer.Timer();
     private var intervalTimer = new Timer.Timer();
-    private var currentStep = "WAITING";
+    private var currentStep = START;
     
     private var trainingStopwatch = new Stopwatch();
+    private var repetitions = new Repetitions();
 
     /**
      * Construct a new object.
      *
      * @param view the reference to the UI
      */
-    public function initialize(view) {
+    public function initialize(watchUi) {
         BehaviorDelegate.initialize();
-        trainingBuddyView = view;
+        view = watchUi;
         selectedActivity = Activity.SPORT_TRAINING;
 
         updateViewTimer.start(method(:timerCallback), TIMER_INTERVAL, true);
     }
 
     private function updateView() {
-        trainingBuddyView.updateTrainingDuration(trainingStopwatch.toString());
+        view.updateTrainingDuration(trainingStopwatch.toString());
     }
 
     function timerCallback() {
@@ -78,6 +79,12 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * Implementation for the start button press.
      */
     private function pressStartButton() {
+        if (currentStep.toString() == "START") {
+            currentStep = WARMUP;
+            view.updateCurrentStep("WARMUP");
+            updateView();
+        }
+
         activityRunning = !activityRunning;
 
         if (activityRunning) {
@@ -91,7 +98,53 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * Implementation for the lap button press.
      */
     private function pressLapButton() {
-        
+        if (!activityRunning) {
+            return;
+        }
+
+        switch(currentStep) {
+            case START:
+                currentStep = WARMUP;
+                break;
+
+            case WARMUP:
+                currentStep = PREPARE;
+                break;
+
+            case PREPARE:
+                repetitions.increaseLaps();
+                view.updateLapCounter(repetitions.getLaps() + " / 3");
+                view.updateSetCounter(repetitions.getSets() + " / 4");
+                currentStep = EXERCISE;
+                break;
+
+            case EXERCISE:
+
+                currentStep = PAUSE;
+                break;
+
+            case PAUSE:
+                // 
+                if (repetitions.trainingFinished()) {
+                    currentStep = COOLDOWN;
+                } else {
+                    repetitions.increaseLaps();
+                    view.updateLapCounter(repetitions.getLaps() + " / 3");
+                    view.updateSetCounter(repetitions.getSets() + " / 4");
+                    currentStep = EXERCISE;
+                }
+
+                break;
+
+            case COOLDOWN:
+
+                break;
+
+            default:
+                System.println("Invalid step: " + currentStep);
+        }
+
+        view.updateCurrentStep(currentStep.toString());
     }
 
 }
