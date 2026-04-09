@@ -1,7 +1,8 @@
 enum {
-    START,
-    WARMUP,
-    EXERCISE,
-    PAUSE,
-    COOLDOWN
+    START = "START",
+    WARMUP = "WARMUP",
+    PREPARE = "PREPARE",
+    EXERCISE = "EXERCISE",
+    PAUSE = "PAUSE",
+    COOLDOWN = "COOLDOWN"
 }
