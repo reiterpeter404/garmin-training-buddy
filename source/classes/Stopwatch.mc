@@ -1,16 +1,19 @@
 using Toybox.Lang;
 
-const HOUR_IN_MINUTES = 60;
-const MINUTE_IN_SECONDS = 60;
-const SECOND_IN_MILLIS = 1000;
+class Stopwatch extends Lang.Object {
+    const HOUR_IN_MINUTES = 60;
+    const MINUTE_IN_SECONDS = 60;
+    const SECOND_IN_MILLIS = 1000;
+    const TIMER_INTERVAL = 100;
 
-var _hours = 0;
-var _minutes = 0;
-var _seconds = 0;
-var _milliseconds = 0;
+    private var timer = new Timer.Timer();
+    private var timerCount = 0l;
 
-class Duration extends Lang.Object {
-    
+    var _hours = 0;
+    var _minutes = 0;
+    var _seconds = 0;
+    var _milliseconds = 0;
+
     /**
      * Create a new object of the Duration class.
      */
@@ -19,6 +22,19 @@ class Duration extends Lang.Object {
         _minutes = 0;
         _seconds = 0;
         _milliseconds = 0;
+    }
+
+    function start() {
+        timer.start(method(:timerCallback), TIMER_INTERVAL, true);
+    }
+
+    function stop() {
+        timer.stop();
+    }
+
+    function timerCallback() {
+        timerCount += 1;
+        updateTimer( timerCount , TIMER_INTERVAL );
     }
 
     /**

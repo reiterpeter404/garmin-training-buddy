@@ -12,11 +12,11 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var selectedActivity;
     private var trainingTimerCounter = 0;
     private var activityRunning = false;
-    private var timer = new Timer.Timer();
+    private var updateViewTimer = new Timer.Timer();
     private var intervalTimer = new Timer.Timer();
     private var currentStep = "WAITING";
     
-    private var trainingDuration = Duration;
+    private var trainingStopwatch = new Stopwatch();
 
     /**
      * Construct a new object.
@@ -27,6 +27,16 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         BehaviorDelegate.initialize();
         trainingBuddyView = view;
         selectedActivity = Activity.SPORT_TRAINING;
+
+        updateViewTimer.start(method(:timerCallback), TIMER_INTERVAL, true);
+    }
+
+    private function updateView() {
+        trainingBuddyView.updateTrainingDuration(trainingStopwatch.toString());
+    }
+
+    function timerCallback() {
+        updateView();
     }
 
     public function onKey(keyEvent) {
@@ -63,23 +73,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         }
         return true;
     }
-    
-    /**
-     * Increase the timer counter and update the UI.
-     */
-    public function timerCallback() {
-        trainingTimerCounter += 1;
-        trainingDuration.updateTimer( trainingTimerCounter , TIMER_INTERVAL );
-
-        if (trainingBuddyView != null) {
-            trainingBuddyView.updateTrainingDuration(
-                trainingDuration.toString()
-            );
-        } else {
-            System.println("View is null");
-        }
-    }
-
+ 
     /**
      * Implementation for the start button press.
      */
@@ -87,9 +81,9 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         activityRunning = !activityRunning;
 
         if (activityRunning) {
-            timer.start(method(:timerCallback), TIMER_INTERVAL, true);
+            trainingStopwatch.start();
         } else {
-            timer.stop();
+            trainingStopwatch.stop();
         }
     }
 
