@@ -9,7 +9,7 @@ const TRAINING_INTERVAL_DURATION_IN_SECONDS = 180;
 
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var view;
-    private var selectedActivity;
+    private var selectedActivity = Activity.SPORT_TRAINING;
     private var trainingTimerCounter = 0;
     private var activityRunning = false;
     private var updateViewTimer = new Timer.Timer();
@@ -27,7 +27,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     public function initialize(watchUi) {
         BehaviorDelegate.initialize();
         view = watchUi;
-        selectedActivity = Activity.SPORT_TRAINING;
 
         updateViewTimer.start(method(:timerCallback), TIMER_INTERVAL, true);
     }
@@ -79,10 +78,14 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * Implementation for the start button press.
      */
     private function pressStartButton() {
-        if (currentStep.toString() == "START") {
-            currentStep = WARMUP;
-            view.updateCurrentStep("WARMUP");
-            updateView();
+        switch (currentStep) {
+            case START:
+                System.println("CHANGE TO WARMUP");
+                currentStep = WARMUP;
+                view.updateCurrentStep("WARMUP");
+                break;
+            default:
+                System.println("current step = " + currentStep);
         }
 
         activityRunning = !activityRunning;
@@ -92,6 +95,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         } else {
             trainingStopwatch.stop();
         }
+        updateView();
     }
 
     /**
