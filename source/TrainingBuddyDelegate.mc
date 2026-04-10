@@ -29,16 +29,17 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         view = watchUi;
 
         updateViewTimer.start(method(:timerCallback), TIMER_INTERVAL, true);
-
-
-        view.updateLapCounter(repetitions.getLapView());
-        view.updateSetCounter(repetitions.getSetView());
-
         updateView();
     }
 
     private function updateView() {
         view.updateTrainingDuration(trainingStopwatch.toString());
+
+        view.updateIntervalTimer("unset");
+        view.updateCurrentStep(currentStep.toString());
+
+        view.updateLapCounter(repetitions.getLapView());
+        view.updateSetCounter(repetitions.getSetView());
     }
 
     function timerCallback() {
@@ -88,7 +89,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
             case START:
                 System.println("CHANGE TO WARMUP");
                 currentStep = WARMUP;
-                view.updateCurrentStep("WARMUP");
                 break;
             default:
                 System.println("current step = " + currentStep);
@@ -123,8 +123,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
 
             case PREPARE:
                 repetitions.increaseLaps();
-                    view.updateLapCounter(repetitions.getLapView());
-                    view.updateSetCounter(repetitions.getSetView());
                 currentStep = EXERCISE;
                 break;
 
@@ -139,8 +137,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                     currentStep = COOLDOWN;
                 } else {
                     repetitions.increaseLaps();
-                    view.updateLapCounter(repetitions.getLapView());
-                    view.updateSetCounter(repetitions.getSetView());
                     currentStep = EXERCISE;
                 }
 
@@ -154,7 +150,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 System.println("Invalid step: " + currentStep);
         }
 
-        view.updateCurrentStep(currentStep.toString());
     }
 
 }
