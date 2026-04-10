@@ -17,7 +17,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var currentStep = START;
     
     private var trainingStopwatch = new Stopwatch();
-    private var repetitions = new Repetitions();
+    private var repetitions = new Repetitions(3, 4);
 
     /**
      * Construct a new object.
@@ -29,6 +29,12 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         view = watchUi;
 
         updateViewTimer.start(method(:timerCallback), TIMER_INTERVAL, true);
+
+
+        view.updateLapCounter(repetitions.getLapView());
+        view.updateSetCounter(repetitions.getSetView());
+
+        updateView();
     }
 
     private function updateView() {
@@ -117,8 +123,8 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
 
             case PREPARE:
                 repetitions.increaseLaps();
-                view.updateLapCounter(repetitions.getLaps() + " / 3");
-                view.updateSetCounter(repetitions.getSets() + " / 4");
+                    view.updateLapCounter(repetitions.getLapView());
+                    view.updateSetCounter(repetitions.getSetView());
                 currentStep = EXERCISE;
                 break;
 
@@ -133,8 +139,8 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                     currentStep = COOLDOWN;
                 } else {
                     repetitions.increaseLaps();
-                    view.updateLapCounter(repetitions.getLaps() + " / 3");
-                    view.updateSetCounter(repetitions.getSets() + " / 4");
+                    view.updateLapCounter(repetitions.getLapView());
+                    view.updateSetCounter(repetitions.getSetView());
                     currentStep = EXERCISE;
                 }
 

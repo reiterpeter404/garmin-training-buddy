@@ -1,13 +1,16 @@
 class Repetitions {
-    const MAX_LAPS = 3;
-    const MAX_SETS = 4;
-
     var laps = 0;
     var sets = 0;
 
-    function initialize() {
+    var lapCount;
+    var setCount;
+
+    function initialize(_lapCount, _setCount) {
         laps = 0;
         sets = 0;
+
+        lapCount = _lapCount;
+        setCount = _setCount;
     }
 
     function getLaps() {
@@ -18,6 +21,14 @@ class Repetitions {
         return sets;
     }
 
+    function getLapView() {
+        return laps + " / " + lapCount;
+    }
+
+    function getSetView() {
+        return sets + " / " + setCount;
+    }
+
     function increaseLaps() {
 
         // start first training set
@@ -26,9 +37,9 @@ class Repetitions {
             laps++;
             return true;
         }
-        if (laps >= MAX_LAPS) {
+        if (laps >= lapCount) {
             // finish the training
-            if (sets == MAX_SETS) {
+            if (sets == setCount) {
                 return false;
             } else {
                 laps = 1;
@@ -42,6 +53,6 @@ class Repetitions {
     }
 
     function trainingFinished() {
-        return laps == MAX_LAPS && sets == MAX_SETS;
+        return laps == lapCount && sets == setCount;
     }
 }
