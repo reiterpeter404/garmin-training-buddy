@@ -2,11 +2,11 @@ import Toybox.Graphics;
 import Toybox.WatchUi;
 
 class TrainingBuddyView extends WatchUi.View {
-    private var _trainingDuration = "00:00:0";
-    private var _intervalTimer = "0:00";
-    private var _lapCounter = "0 / 3";
-    private var _setCounter = "0 / 4";
-    private var _currentStep = "START";
+    private var _trainingDuration = "";
+    private var _intervalTimer = "";
+    private var _lapCounter = "x / y";
+    private var _setCounter = "x / y";
+    private var _currentStep = "";
 
     function initialize() {
         View.initialize();
