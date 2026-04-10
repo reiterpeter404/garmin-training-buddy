@@ -32,6 +32,9 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         updateView();
     }
 
+    /**
+     * Update all fields of the UI.
+     */
     private function updateView() {
         view.updateTrainingDuration(trainingStopwatch.toString());
 
@@ -42,10 +45,18 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         view.updateSetCounter(repetitions.getSetView());
     }
 
+    /**
+     * Update the UI, if the timer event is triggered.
+     */
     function timerCallback() {
         updateView();
     }
 
+    /**
+     * A key event was triggered.
+     *
+     * @returns true, if the button press was implemented. False otherwise.
+     */
     public function onKey(keyEvent) {
         switch(keyEvent.getKey()) {
             // Start/stop button
