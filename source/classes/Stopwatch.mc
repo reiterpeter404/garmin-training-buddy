@@ -18,10 +18,6 @@ class Stopwatch extends Lang.Object {
      * Create a new object of the Duration class.
      */
     function initialize() {
-        _hours = 0;
-        _minutes = 0;
-        _seconds = 0;
-        _milliseconds = 0;
     }
 
     function start() {
