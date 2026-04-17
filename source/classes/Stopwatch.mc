@@ -1,8 +1,7 @@
 using Toybox.Lang;
+using Toybox.Time.Gregorian;
 
 class Stopwatch extends Lang.Object {
-    const HOUR_IN_MINUTES = 60;
-    const MINUTE_IN_SECONDS = 60;
     const SECOND_IN_MILLIS = 1000;
     const TIMER_INTERVAL = 100;
 
@@ -42,11 +41,11 @@ class Stopwatch extends Lang.Object {
     function updateTimer(counter, counterIntervalInMs) {
         var totalMs = counter * counterIntervalInMs;
 
-        _hours = totalMs / (SECOND_IN_MILLIS * MINUTE_IN_SECONDS * HOUR_IN_MINUTES);
-        totalMs = totalMs % (SECOND_IN_MILLIS * MINUTE_IN_SECONDS * HOUR_IN_MINUTES);
+        _hours = totalMs / (SECOND_IN_MILLIS * Gregorian.SECONDS_PER_HOUR);
+        totalMs = totalMs % (SECOND_IN_MILLIS * Gregorian.SECONDS_PER_HOUR);
 
-        _minutes = totalMs / (SECOND_IN_MILLIS * MINUTE_IN_SECONDS);
-        totalMs = totalMs % (SECOND_IN_MILLIS * MINUTE_IN_SECONDS);
+        _minutes = totalMs / (SECOND_IN_MILLIS * Gregorian.SECONDS_PER_MINUTE);
+        totalMs = totalMs % (SECOND_IN_MILLIS * Gregorian.SECONDS_PER_MINUTE);
 
         _seconds = totalMs / SECOND_IN_MILLIS;
         _milliseconds = totalMs % SECOND_IN_MILLIS;
