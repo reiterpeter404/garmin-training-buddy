@@ -3,6 +3,6 @@ enum {
     WARMUP = "WARMUP",
     PREPARE = "PREPARE",
     EXERCISE = "EXERCISE",
-    PAUSE = "PAUSE",
+    PAUSE = "REST",
     COOLDOWN = "COOLDOWN"
 }

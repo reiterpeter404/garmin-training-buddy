@@ -1,3 +1,4 @@
+import Toybox.Activity;
 import Toybox.Lang;
 import Toybox.Timer;
 import Toybox.WatchUi;
@@ -8,16 +9,23 @@ const TRAINING_INTERVAL_DURATION_IN_SECONDS = 180;
 
 
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
-    private var view;
-    private var selectedActivity = Activity.SPORT_TRAINING;
-    private var trainingTimerCounter = 0;
+    // timer
     private var activityRunning = false;
+    // timer to update the view periodicly
     private var updateViewTimer = new Timer.Timer();
     private var intervalTimer = new Timer.Timer();
-    private var currentStep = START;
-    
-    private var trainingStopwatch = new Stopwatch();
+
+    // activity
+    private var session = null;
     private var repetitions = new Repetitions(3, 4);
+    private var currentStep = START;
+    private var nextExerciseAttention = new Attention.VibeProfile(50, 2000);
+    private var pauseAttention = new Attention.VibeProfile(25, 2000);
+
+    // UI
+    private var view;
+    private var trainingStopwatch = new Stopwatch();
+
 
     /**
      * Construct a new object.
@@ -30,6 +38,31 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
 
         updateViewTimer.start(method(:timerCallback), TIMER_INTERVAL, true);
         updateView();
+    }
+
+    /**
+     * use the select Start/Stop or touch for recording
+     */
+    function onSelect() {
+        pressStartButton();
+        System.println("onSelect executed");
+        if (Toybox has :ActivityRecording) {                         // check device for activity recording
+            if ((session == null) || (session.isRecording() == false)) {
+                session = ActivityRecording.createSession({          // set up recording session
+                        :sport=>Activity.SPORT_TRAINING,                  // set sport type
+                        :subSport=>Activity.SUB_SPORT_STRENGTH_TRAINING,  // set sub sport type
+                        :name=>"Interval Training"                        // set session name
+                });
+                session.start();                                     // call start session
+            }
+            else if ((session != null) && session.isRecording()) {
+                session.stop();                                      // stop the session
+                session.save();                                      // save the session
+                session = null;                                      // set session control variable to null
+            }
+
+        }
+        return true;                                                 // return true for onSelect function
     }
 
     /**
@@ -50,6 +83,14 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      */
     function timerCallback() {
         updateView();
+    }
+
+    function intervalTimerCallback() {
+        nextExercise();
+    }
+
+    function startIntervalTimer() {
+        intervalTimer.start(method(:intervalTimerCallback), TRAINING_INTERVAL_DURATION_IN_SECONDS * 1000, true);
     }
 
     /**
@@ -133,24 +174,17 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 break;
 
             case PREPARE:
+                startIntervalTimer();
                 repetitions.increaseLaps();
                 currentStep = EXERCISE;
                 break;
 
             case EXERCISE:
-
-                currentStep = PAUSE;
+                startRest();
                 break;
 
             case PAUSE:
-                // 
-                if (repetitions.trainingFinished()) {
-                    currentStep = COOLDOWN;
-                } else {
-                    repetitions.increaseLaps();
-                    currentStep = EXERCISE;
-                }
-
+                nextExercise();
                 break;
 
             case COOLDOWN:
@@ -160,7 +194,23 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
             default:
                 System.println("Invalid step: " + currentStep);
         }
-
     }
 
+    function nextExercise() {
+        session.addLap();
+
+        // start cooldown, if training is finished
+        if (repetitions.trainingFinished()) {
+            intervalTimer.stop();
+            currentStep = COOLDOWN;
+        } else {
+            startIntervalTimer();
+            repetitions.increaseLaps();
+            currentStep = EXERCISE;
+        }
+    }
+
+    function startRest() {
+        currentStep = PAUSE;
+    }
 }
