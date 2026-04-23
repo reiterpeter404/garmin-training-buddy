@@ -87,6 +87,10 @@ class Stopwatch extends Lang.Object {
         return _milliseconds;
     }
 
+    function getTimestamp() {
+        return timerCount;
+    }
+
     /**
      * Convert the current object into a string.
      *
