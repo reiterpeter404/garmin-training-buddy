@@ -1,0 +1,91 @@
+using Toybox.Lang;
+using Toybox.System;
+using Toybox.Timer;
+
+class WorkoutTimer {
+    const TICK_COUNT = 100;
+    const MILLISECONDS = 1000;
+    const MS_IN_S = 1000;
+    const S_IN_M = 60;
+    const MS_IN_M = MS_IN_S * S_IN_M;
+
+    var _duration;      // total duration in ms
+    var _remaining;     // remaining time in ms
+    var _timer;         // Timer object
+    var _callback;      // delegate callback
+
+    /**
+     * Create a new workout timer.
+     * @param duration the duration of the timer in seconds
+     * @param callback the callback method to get the timer finished event
+     */
+    function initialize(durationInSeconds, callback) {
+        _duration  = durationInSeconds * MILLISECONDS;
+        _remaining = durationInSeconds * MILLISECONDS;
+        _callback  = callback;
+        _timer     = new Timer.Timer();
+    }
+
+    /**
+     * Start the timer.
+     */
+    function start() {
+        _timer.start(method(:_tick), TICK_COUNT, true);
+    }
+
+    /**
+     * Stop the timer.
+     */
+    function stop() {
+        _timer.stop();
+    }
+
+    /**
+     * Reset the timer;
+     */
+    function reset() {
+        stop();
+        _remaining = _duration;
+    }
+
+    /**
+     * The timer callback function.
+     */
+    function _tick() {
+        _remaining -= TICK_COUNT;
+
+        if (_remaining <= 0) {
+            _remaining = 0;
+            stop();
+
+            if (_callback != null) {
+                _callback.invoke();
+            }
+        }
+    }
+
+    /**
+     * Get the remaining time in milliseconds.
+     * @returns the remaining time as a Number
+     */
+    function getRemainingMs() {
+        return _remaining;
+    }
+
+    /**
+     * Get the remaining time as String.
+     * @returns the remaining time as a String.
+     */
+    function getRemainingTimeString() {
+        var totalMs = _remaining;
+
+        var minutes = (totalMs / MS_IN_M).toNumber();
+        var seconds = ((totalMs % MS_IN_M) / MILLISECONDS).toNumber();
+        var milliseconds = ((totalMs % MILLISECONDS) / TICK_COUNT).toNumber();
+
+        return Lang.format("$1$:$2$:$3$",
+            [minutes.format("%01d"),
+             seconds.format("%02d"),
+             milliseconds.format("%01d")]);
+    }
+}
