@@ -6,8 +6,8 @@ using Toybox.Time.Gregorian;
 
 const TIMER_INTERVAL = 100;
 const MS_TO_S = 1000.0;
-const PREPARATION_DURATION_IN_SECONDS = 30 * MS_TO_S;
-const TRAINING_INTERVAL_DURATION_IN_SECONDS = 180 * MS_TO_S;
+const PREPARATION_DURATION_IN_SECONDS = 30;
+const TRAINING_INTERVAL_DURATION_IN_SECONDS = 180;
 
 
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
