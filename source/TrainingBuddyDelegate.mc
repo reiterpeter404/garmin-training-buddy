@@ -2,22 +2,27 @@ import Toybox.Lang;
 import Toybox.Timer;
 import Toybox.WatchUi;
 
+using Toybox.Time.Gregorian;
+
 const TIMER_INTERVAL = 100;
 const MS_TO_S = 1000.0;
+const PREPARATION_DURATION_IN_SECONDS = 30;
 const TRAINING_INTERVAL_DURATION_IN_SECONDS = 180;
 
 
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var view;
     private var selectedActivity = Activity.SPORT_TRAINING;
-    private var trainingTimerCounter = 0;
     private var activityRunning = false;
     private var updateViewTimer = new Timer.Timer();
-    private var intervalTimer = new Timer.Timer();
     private var currentStep = START;
-    
-    private var trainingStopwatch = new Stopwatch();
+
     private var repetitions = new Repetitions(3, 4);
+
+    // the total time of the workout
+    private var trainingStopwatch = new Stopwatch();
+    // the timer to trigger the next lap
+    private var workoutTimer;
 
     /**
      * Construct a new object.
@@ -28,8 +33,30 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         BehaviorDelegate.initialize();
         view = watchUi;
 
+        workoutTimer = new WorkoutTimer(PREPARATION_DURATION_IN_SECONDS, method(:workoutTimerCallback));
+
         updateViewTimer.start(method(:timerCallback), TIMER_INTERVAL, true);
         updateView();
+    }
+
+    /**
+     * Update the UI, if the timer event is triggered.
+     */
+    function timerCallback() {
+        updateView();
+    }
+
+    function workoutTimerCallback() {
+        switch(currentStep) {
+            case PREPARE:
+                onPreparationDone();
+                break;
+            case EXERCISE:
+                currentStep = PAUSE;
+                // no break;
+            default:
+                pressLapButton();
+        }
     }
 
     /**
@@ -38,18 +65,21 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private function updateView() {
         view.updateTrainingDuration(trainingStopwatch.toString());
 
-        view.updateIntervalTimer("unset");
+        switch(currentStep) {
+            case START:
+                view.updateIntervalTimer("Press START");
+                break;
+            case WARMUP:
+            case COOLDOWN:
+                view.updateIntervalTimer("Press LAP");
+                break;
+            default:
+                view.updateIntervalTimer(workoutTimer.getRemainingTimeString());
+        }
         view.updateCurrentStep(currentStep.toString());
 
         view.updateLapCounter(repetitions.getLapView());
         view.updateSetCounter(repetitions.getSetView());
-    }
-
-    /**
-     * Update the UI, if the timer event is triggered.
-     */
-    function timerCallback() {
-        updateView();
     }
 
     /**
@@ -108,11 +138,28 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         activityRunning = !activityRunning;
 
         if (activityRunning) {
-            trainingStopwatch.start();
+            startTimers();
         } else {
-            trainingStopwatch.stop();
+            stopTimers();
         }
         updateView();
+    }
+
+    function stopTimers() {
+        trainingStopwatch.stop();
+        workoutTimer.stop();
+    }
+
+    function startTimers() {
+        trainingStopwatch.start();
+        switch(currentStep) {
+            case START:
+            case WARMUP:
+            case COOLDOWN:
+                break;
+            default:
+                workoutTimer.start();
+        }
     }
 
     /**
@@ -130,15 +177,14 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
 
             case WARMUP:
                 currentStep = PREPARE;
+                workoutTimer.start();
                 break;
 
             case PREPARE:
-                repetitions.increaseLaps();
-                currentStep = EXERCISE;
+                onPreparationDone();
                 break;
 
             case EXERCISE:
-
                 currentStep = PAUSE;
                 break;
 
@@ -149,6 +195,9 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 } else {
                     repetitions.increaseLaps();
                     currentStep = EXERCISE;
+                    workoutTimer.reset();
+                    workoutTimer.start();
+                    workoutTimer.start();
                 }
 
                 break;
@@ -163,4 +212,16 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
 
     }
 
+    /**
+     * Changes the duration of the timer and starts the workout.
+     */
+    function onPreparationDone() {
+        workoutTimer.stop();
+        workoutTimer = new WorkoutTimer(TRAINING_INTERVAL_DURATION_IN_SECONDS, method(:workoutTimerCallback));
+
+        repetitions.increaseLaps();
+        currentStep = EXERCISE;
+        workoutTimer.reset();
+        workoutTimer.start();
+    }
 }
