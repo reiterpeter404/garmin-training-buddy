@@ -1,5 +1,6 @@
 import Toybox.Lang;
 import Toybox.Timer;
+import Toybox.ActivityRecording;
 import Toybox.WatchUi;
 
 using Toybox.Time.Gregorian;
@@ -16,6 +17,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var activityRunning = false;
     private var updateViewTimer = new Timer.Timer();
     private var currentStep = START;
+    private var _session as Session? = null;
 
     private var repetitions = new Repetitions(3, 4);
 
@@ -29,7 +31,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      *
      * @param view the reference to the UI
      */
-    public function initialize(watchUi) {
+    public function initialize(watchUi as TrainingBuddyView) {
         BehaviorDelegate.initialize();
         view = watchUi;
 
@@ -42,11 +44,11 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     /**
      * Update the UI, if the timer event is triggered.
      */
-    function timerCallback() {
+    function timerCallback() as Void {
         updateView();
     }
 
-    function workoutTimerCallback() {
+    function workoutTimerCallback() as Void {
         switch(currentStep) {
             case PREPARE:
                 onPreparationDone();
@@ -87,12 +89,13 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      *
      * @returns true, if the button press was implemented. False otherwise.
      */
-    public function onKey(keyEvent) {
+    public function onKey(keyEvent) as Boolean {
         switch(keyEvent.getKey()) {
             // Start/stop button
             case KEY_ENTER:
                 System.println("Start/stop button registered");
                 pressStartButton();
+                handleStartStop();
                 break;
             // Back/lap key
             case KEY_ESC:
@@ -121,11 +124,11 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         }
         return true;
     }
- 
+
     /**
      * Implementation for the start button press.
      */
-    private function pressStartButton() {
+    private function pressStartButton() as Void {
         switch (currentStep) {
             case START:
                 System.println("CHANGE TO WARMUP");
@@ -145,12 +148,12 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         updateView();
     }
 
-    function stopTimers() {
+    function stopTimers() as Void {
         trainingStopwatch.stop();
         workoutTimer.stop();
     }
 
-    function startTimers() {
+    function startTimers() as Void {
         trainingStopwatch.start();
         switch(currentStep) {
             case START:
@@ -165,10 +168,19 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     /**
      * Implementation for the lap button press.
      */
-    private function pressLapButton() {
-        if (!activityRunning) {
+    private function pressLapButton() as Void {
+        if (!exitAppOnBack()) {
+            System.println("Back button pressed with no activity. Closing app.");
+            closeApp();
             return;
         }
+
+        if (!activityRunning) {
+            System.println("Lap button pressed but no activity is running. Ignoring.");
+            return;
+        }
+
+        System.println("Lap button pressed. Current step = " + currentStep);
 
         switch(currentStep) {
             case START:
@@ -215,7 +227,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     /**
      * Changes the duration of the timer and starts the workout.
      */
-    function onPreparationDone() {
+    function onPreparationDone() as Void {
         workoutTimer.stop();
         workoutTimer = new WorkoutTimer(TRAINING_INTERVAL_DURATION_IN_SECONDS, method(:workoutTimerCallback));
 
@@ -223,5 +235,73 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         currentStep = EXERCISE;
         workoutTimer.reset();
         workoutTimer.start();
+    }
+
+    // Handles the physical BACK button
+    function exitAppOnBack() as Boolean {
+        System.println("Back button pressed.");
+        if (_session == null) {
+            // If no activity is running/created, let the system close the app
+            return false; 
+        }
+        // If an activity exists, intercept the back button so it doesn't accidentally close
+        return true; 
+    }
+
+    private function handleStartStop() as Void {
+        if (_session == null) {
+            // Create and start the activity
+            _session = ActivityRecording.createSession({
+                :name => "Strength Training",
+                :sport => selectedActivity
+            });
+            _session.start();
+            // view.updateMessage("Recording...");
+        } else if (_session.isRecording()) {
+            // Pause the activity and immediately open the pause menu
+            _session.stop();
+            // view.updateMessage("Paused");
+            pushPauseMenu();
+        }
+    }
+
+    private function pushPauseMenu() as Void {
+        var menu = new WatchUi.Menu2({:title => "Activity Paused"});
+        menu.addItem(new WatchUi.MenuItem("Resume", null, "resume", null));
+        menu.addItem(new WatchUi.MenuItem("Save", null, "save", null));
+        menu.addItem(new WatchUi.MenuItem("Discard", null, "discard", null));
+        
+        WatchUi.pushView(menu, new PauseMenuDelegate(self), WatchUi.SLIDE_UP);
+    }
+
+    // Callbacks from the menus
+    function resumeActivity() as Void {
+        if (_session != null) {
+            _session.start();
+            // _view.updateMessage("Recording...");
+        }
+        pressStartButton();
+    }
+
+    function saveActivity() as Void {
+        if (_session != null) {
+            _session.save();
+            _session = null;
+            closeApp();
+            // _view.updateMessage("Saved!\nPress START");
+        }
+    }
+
+    function discardActivity() as Void {
+        if (_session != null) {
+            _session.discard();
+            _session = null;
+            closeApp();
+            // _view.updateMessage("Discarded.\nPress START");
+        }
+    }
+
+    function closeApp() as Void {
+        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }
 }

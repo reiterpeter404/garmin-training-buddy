@@ -50,27 +50,27 @@ class TrainingBuddyView extends WatchUi.View {
     function onHide() as Void {
     }
 
-    public function updateTrainingDuration(trainingDuration) {
+    public function updateTrainingDuration(trainingDuration) as Void {
         _trainingDuration = trainingDuration;
         WatchUi.requestUpdate();
     }
 
-    public function updateIntervalTimer(intervalTimer) {
+    public function updateIntervalTimer(intervalTimer) as Void {
         _intervalTimer = intervalTimer;
         WatchUi.requestUpdate();
     }
 
-    public function updateLapCounter(lapCounter) {
+    public function updateLapCounter(lapCounter) as Void {
         _lapCounter = lapCounter;
         WatchUi.requestUpdate();
     }
 
-    public function updateSetCounter(setCounter) {
+    public function updateSetCounter(setCounter) as Void {
         _setCounter = setCounter;
         WatchUi.requestUpdate();
     }
 
-    public function updateCurrentStep(currentStep) {
+    public function updateCurrentStep(currentStep) as Void {
         _currentStep = currentStep;
         WatchUi.requestUpdate();
     }
