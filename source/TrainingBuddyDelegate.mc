@@ -57,7 +57,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 currentStep = PAUSE;
                 // no break;
             default:
-                pressLapButton();
+                onBack();
         }
     }
 
@@ -100,7 +100,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
             // Back/lap key
             case KEY_ESC:
                 System.println("Back/lap key registered");
-                pressLapButton();
+                // pressLapButton();
                 break;
             // Menu event
             case KEY_MENU:
@@ -168,16 +168,16 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     /**
      * Implementation for the lap button press.
      */
-    private function pressLapButton() as Void {
+    function onBack() as Boolean {
         if (!exitAppOnBack()) {
             System.println("Back button pressed with no activity. Closing app.");
             closeApp();
-            return;
+            return true;
         }
 
         if (!activityRunning) {
             System.println("Lap button pressed but no activity is running. Ignoring.");
-            return;
+            return true;
         }
 
         System.println("Lap button pressed. Current step = " + currentStep);
@@ -222,6 +222,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 System.println("Invalid step: " + currentStep);
         }
 
+        return true;
     }
 
     /**
