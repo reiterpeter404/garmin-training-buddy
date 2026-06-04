@@ -19,15 +19,15 @@ class Stopwatch extends Lang.Object {
     function initialize() {
     }
 
-    function start() {
+    function start() as Void {
         timer.start(method(:timerCallback), TIMER_INTERVAL, true);
     }
 
-    function stop() {
+    function stop() as Void {
         timer.stop();
     }
 
-    function timerCallback() {
+    function timerCallback() as Void {
         timerCount += 1;
         updateTimer( timerCount , TIMER_INTERVAL );
     }
@@ -38,7 +38,7 @@ class Stopwatch extends Lang.Object {
      * @param counter              the current counter of the timer
      * @param counterIntervalsInMs the interval of the counter
      */
-    function updateTimer(counter, counterIntervalInMs) {
+    function updateTimer(counter, counterIntervalInMs) as Void {
         var totalMs = counter * counterIntervalInMs;
 
         _hours = totalMs / (SECOND_IN_MILLIS * Gregorian.SECONDS_PER_HOUR);
@@ -56,7 +56,7 @@ class Stopwatch extends Lang.Object {
      * 
      * @returns the hours
      */
-    function getHours() {
+    function getHours(){
         return _hours;
     }
 

@@ -29,21 +29,21 @@ class WorkoutTimer {
     /**
      * Start the timer.
      */
-    function start() {
+    function start() as Void {
         _timer.start(method(:_tick), TICK_COUNT, true);
     }
 
     /**
      * Stop the timer.
      */
-    function stop() {
+    function stop() as Void {
         _timer.stop();
     }
 
     /**
      * Reset the timer;
      */
-    function reset() {
+    function reset() as Void {
         stop();
         _remaining = _duration;
     }
@@ -51,7 +51,7 @@ class WorkoutTimer {
     /**
      * The timer callback function.
      */
-    function _tick() {
+    function _tick() as Void {
         _remaining -= TICK_COUNT;
 
         if (_remaining <= 0) {
@@ -68,7 +68,7 @@ class WorkoutTimer {
      * Get the remaining time in milliseconds.
      * @returns the remaining time as a Number
      */
-    function getRemainingMs() {
+    function getRemainingMs(){
         return _remaining;
     }
 
