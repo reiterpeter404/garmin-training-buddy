@@ -252,8 +252,8 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         if (_session == null) {
             // Create and start the activity
             _session = ActivityRecording.createSession({
-                :name => "Custom Activity",
-                :sport => ActivityRecording.SPORT_GENERIC
+                :name => "Strength Training",
+                :sport => selectedActivity
             });
             _session.start();
             // view.updateMessage("Recording...");
