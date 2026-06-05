@@ -266,7 +266,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         }
     }
 
-    private function pushPauseMenu() as Void {
+    public function pushPauseMenu() as Void {
         var menu = new WatchUi.Menu2({:title => "Activity Paused"});
         menu.addItem(new WatchUi.MenuItem("Resume", null, "resume", null));
         menu.addItem(new WatchUi.MenuItem("Save", null, "save", null));

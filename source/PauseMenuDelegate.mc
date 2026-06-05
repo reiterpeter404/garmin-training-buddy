@@ -9,6 +9,13 @@ class PauseMenuDelegate extends WatchUi.Menu2InputDelegate {
         _mainDelegate = mainDelegate;
     }
 
+    /*
+     * Prevent default behavior of the back button to avoid closing the menu.
+     */
+    function onBack() {
+        return;
+    }
+
     function onSelect(item as MenuItem) as Void {
         var id = item.getId() as String;
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE); // Remove the pause menu

@@ -9,6 +9,10 @@ class DiscardConfirmDelegate extends WatchUi.Menu2InputDelegate {
         _mainDelegate = mainDelegate;
     }
 
+    function onBack() {
+        return;
+    }
+
     function onSelect(item as MenuItem) as Void {
         var id = item.getId() as String;
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE); // Remove confirmation menu
@@ -16,8 +20,8 @@ class DiscardConfirmDelegate extends WatchUi.Menu2InputDelegate {
         if (id.equals("confirm_discard")) {
             _mainDelegate.discardActivity();
         } else if (id.equals("cancel_discard")) {
-            // If canceled, go back to recording view but keep it paused
-            _mainDelegate.resumeActivity(); // Or remove this line if you want it to remain paused
+            // return to the pause menu
+            _mainDelegate.pushPauseMenu();
         }
     }
 }
