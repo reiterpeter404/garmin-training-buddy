@@ -1,7 +1,10 @@
-using Toybox.Lang;
-using Toybox.System;
-using Toybox.Timer;
+import Toybox.Lang;
+import Toybox.System;
+import Toybox.Timer;
 
+/**
+ * This class is responsible for handling the workout timer, which triggers the next lap of the workout.
+ */
 class WorkoutTimer {
     const TICK_COUNT = 100;
     const MILLISECONDS = 1000;
@@ -9,17 +12,17 @@ class WorkoutTimer {
     const S_IN_M = 60;
     const MS_IN_M = MS_IN_S * S_IN_M;
 
-    var _duration;      // total duration in ms
-    var _remaining;     // remaining time in ms
-    var _timer;         // Timer object
-    var _callback;      // delegate callback
+    var _duration as Number;    // total duration in ms
+    var _remaining as Number;   // remaining time in ms
+    var _timer as Timer.Timer;                 // Timer object
+    var _callback;              // delegate callback
 
     /**
      * Create a new workout timer.
      * @param duration the duration of the timer in seconds
      * @param callback the callback method to get the timer finished event
      */
-    function initialize(durationInSeconds, callback) {
+    function initialize(durationInSeconds as Number, callback) {
         _duration  = durationInSeconds * MILLISECONDS;
         _remaining = durationInSeconds * MILLISECONDS;
         _callback  = callback;
@@ -68,7 +71,7 @@ class WorkoutTimer {
      * Get the remaining time in milliseconds.
      * @returns the remaining time as a Number
      */
-    function getRemainingMs(){
+    function getRemainingMs() as Number {
         return _remaining;
     }
 
@@ -76,7 +79,7 @@ class WorkoutTimer {
      * Get the remaining time as String.
      * @returns the remaining time as a String.
      */
-    function getRemainingTimeString() {
+    function getRemainingTimeString() as String {
         var totalMs = _remaining;
 
         var minutes = (totalMs / MS_IN_M).toNumber();

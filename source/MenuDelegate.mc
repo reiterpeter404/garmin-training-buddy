@@ -11,8 +11,8 @@ class MenuDelegate extends WatchUi.Menu2InputDelegate {
         _mainDelegate = mainDelegate;
     }
 
-    /*
-     * 
+    /**
+     * Create a menu on pause. The menu will have options to resume, save or discard the activity.
      */
     public function pushPauseMenu() as Void {
         var menu = new WatchUi.Menu2({:title => "Activity Paused"});
@@ -23,8 +23,8 @@ class MenuDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.pushView(menu, new PauseMenuDelegate(_mainDelegate), WatchUi.SLIDE_UP);
     }
 
-    /*
-     *
+    /**
+     * Resume the activity and return to the main view.
      */
     function resumeActivity() as Void {
         var session = _mainDelegate.getSession();
@@ -35,8 +35,8 @@ class MenuDelegate extends WatchUi.Menu2InputDelegate {
         _mainDelegate.pressStartButton();
     }
 
-    /*
-     * 
+    /**
+     * Save the activity and close the app.
      */
     function saveActivity() as Void {
         var session = _mainDelegate.getSession();
@@ -48,8 +48,8 @@ class MenuDelegate extends WatchUi.Menu2InputDelegate {
         }
     }
 
-    /*
-     * 
+    /**
+     * Discard the activity and close the app.
      */
     public function discardActivity() as Void {
         var session = _mainDelegate.getSession();
@@ -61,8 +61,8 @@ class MenuDelegate extends WatchUi.Menu2InputDelegate {
         }
     }
 
-    /*
-     * 
+    /**
+     * Close the application.
      */
     public function closeApp() as Void {
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
