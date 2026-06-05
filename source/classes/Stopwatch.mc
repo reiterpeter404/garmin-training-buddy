@@ -1,6 +1,10 @@
-using Toybox.Lang;
+import Toybox.Lang;
+
 using Toybox.Time.Gregorian;
 
+/**
+ * This class is responsible for tracking the duration of the workout.
+ */
 class Stopwatch extends Lang.Object {
     const SECOND_IN_MILLIS = 1000;
     const TIMER_INTERVAL = 100;
@@ -19,14 +23,23 @@ class Stopwatch extends Lang.Object {
     function initialize() {
     }
 
+    /**
+     * Start the stopwatch.
+     */
     function start() as Void {
         timer.start(method(:timerCallback), TIMER_INTERVAL, true);
     }
 
+    /**
+     * Stop the stopwatch.
+     */
     function stop() as Void {
         timer.stop();
     }
 
+    /**
+     * The callback function for the timer to increase the timer count and update the time values.
+     */
     function timerCallback() as Void {
         timerCount += 1;
         updateTimer( timerCount , TIMER_INTERVAL );
@@ -38,7 +51,7 @@ class Stopwatch extends Lang.Object {
      * @param counter              the current counter of the timer
      * @param counterIntervalsInMs the interval of the counter
      */
-    function updateTimer(counter, counterIntervalInMs) as Void {
+    function updateTimer(counter as Number, counterIntervalInMs as Number) as Void {
         var totalMs = counter * counterIntervalInMs;
 
         _hours = totalMs / (SECOND_IN_MILLIS * Gregorian.SECONDS_PER_HOUR);
@@ -56,7 +69,7 @@ class Stopwatch extends Lang.Object {
      * 
      * @returns the hours
      */
-    function getHours(){
+    function getHours() as Number {
         return _hours;
     }
 
@@ -65,7 +78,7 @@ class Stopwatch extends Lang.Object {
      * 
      * @returns the minutes
      */
-    function getMinutes() {
+    function getMinutes() as Number {
         return _minutes;
     }    
 
@@ -74,7 +87,7 @@ class Stopwatch extends Lang.Object {
      * 
      * @returns the seconds
      */
-    function getSeconds() {
+    function getSeconds() as Number {
         return _seconds;
     }
 
@@ -83,11 +96,11 @@ class Stopwatch extends Lang.Object {
      * 
      * @returns the milliseconds
      */
-    function getMilliseconds() {
+    function getMilliseconds() as Number {
         return _milliseconds;
     }
 
-    function getTimestamp() {
+    function getTimestamp() as Number {
         return timerCount;
     }
 
@@ -98,9 +111,8 @@ class Stopwatch extends Lang.Object {
      *          hours are printed, if greater than zero
      *          for milliseconds, only the hundredths are displayed
      */
-    function toString() {
+    function toString() as String {
         var string = _hours > 0 ? Lang.format("$1$:", _hours) : "";
         return string + Lang.format("$1$:$02$:$3$", [_minutes.format("%02d"), _seconds.format("%02d"), _milliseconds / 100]);
     }
-
 }

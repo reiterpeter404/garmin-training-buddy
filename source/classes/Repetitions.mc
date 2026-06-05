@@ -1,9 +1,14 @@
+import Toybox.Lang;
+
+/**
+ * This class is responsible for tracking the repetitions of the workout, including the laps and sets.
+ */
 class Repetitions {
     var laps = 0;
     var sets = 0;
 
-    var lapCount;
-    var setCount;
+    var lapCount as Number;
+    var setCount as Number;
 
     function initialize(_lapCount, _setCount) {
         laps = 0;
@@ -13,23 +18,44 @@ class Repetitions {
         setCount = _setCount;
     }
 
-    function getLaps() {
+    /**
+     * Get the current lap count.
+     */
+    function getLaps() as Number {
         return laps;
     }
 
-    function getSets() {
+    /**
+     * Get the current set count.
+     */
+    function getSets() as Number {
         return sets;
     }
 
-    function getLapView() {
+    /**
+     * Get the lap view string to be displayed on the UI.
+     *
+     * @returns the lap view string
+     */
+    function getLapView() as String {
         return laps + " / " + lapCount;
     }
 
-    function getSetView() {
+    /**
+     * Get the set view string to be displayed on the UI.
+     *
+     * @returns the set view string
+     */
+    function getSetView() as String {
         return sets + " / " + setCount;
     }
 
-    function increaseLaps() {
+    /**
+     * Increase the lap count.
+     *
+     * @returns true if the lap was increased, false if the training is finished
+     */
+    function increaseLaps() as Boolean {
 
         // start first training set
         if (sets == 0) {
@@ -48,11 +74,13 @@ class Repetitions {
             }
         }
         laps++;
-        
         return true;
     }
 
-    function trainingFinished() {
+    /**
+     * Return true if the training is finished, false otherwise.
+     */
+    function trainingFinished() as Boolean {
         return laps == lapCount && sets == setCount;
     }
 }
