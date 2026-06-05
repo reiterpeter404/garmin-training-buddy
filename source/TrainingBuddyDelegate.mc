@@ -14,7 +14,6 @@ const TRAINING_INTERVAL_DURATION_IN_SECONDS = 180;
 class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var view;
     private var selectedActivity = Activity.SPORT_TRAINING;
-    private var activityRunning = false;
     private var updateViewTimer = new Timer.Timer();
     private var currentStep = START;
     private var session as Session? = null;
@@ -113,10 +112,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         switch(keyEvent.getKey()) {
             // Start/stop button
             case KEY_ENTER:
-                System.println("Start/stop button registered");
-                pressStartButton();
-                handleStartStop();
-                break;
             // Back/lap key
             case KEY_ESC:
                 System.println("Back/lap key registered");
@@ -158,9 +153,11 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 System.println("current step = " + currentStep);
         }
 
-        activityRunning = !activityRunning;
+        if (session == null) {
+            return;
+        }
 
-        if (activityRunning) {
+        if (session.isRecording()) {
             startTimers();
         } else {
             stopTimers();
@@ -192,6 +189,17 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     }
 
     /**
+     * Implementation of the start/stop button press.
+     */
+    function onSelect() as Boolean {
+        System.println("Start/stop button registered");
+        handleStartStop();
+        pressStartButton();
+        
+        return true;
+    }
+
+    /**
      * Implementation for the lap button press.
      */
     function onBack() as Boolean {
@@ -201,7 +209,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
             return true;
         }
 
-        if (!activityRunning) {
+        if (!session.isRecording()) {
             System.println("Lap button pressed but no activity is running. Ignoring.");
             return true;
         }

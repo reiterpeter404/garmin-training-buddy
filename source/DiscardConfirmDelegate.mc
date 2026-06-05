@@ -2,13 +2,11 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 
 class DiscardConfirmDelegate extends WatchUi.Menu2InputDelegate {
-    private var _mainDelegate as TrainingBuddyDelegate;
     private var menuDelegate as MenuDelegate;
 
-    function initialize(mainDelegate as TrainingBuddyDelegate) {
+    function initialize(mainAppDelegate as TrainingBuddyDelegate) {
         Menu2InputDelegate.initialize();
-        _mainDelegate = mainDelegate;
-        menuDelegate = new MenuDelegate(_mainDelegate);
+        menuDelegate = new MenuDelegate(mainAppDelegate);
     }
 
     function onBack() {
