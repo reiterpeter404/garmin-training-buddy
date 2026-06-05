@@ -1,6 +1,7 @@
+import Toybox.ActivityRecording;
+import Toybox.Attention;
 import Toybox.Lang;
 import Toybox.Timer;
-import Toybox.ActivityRecording;
 import Toybox.WatchUi;
 
 using Toybox.Time.Gregorian;
@@ -118,6 +119,8 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * @returns true, if the button press was implemented. False otherwise.
      */
     public function onKey(keyEvent) as Boolean {
+        vibrateStrong();
+
         switch(keyEvent.getKey()) {
             // Start/stop button
             case KEY_ENTER:
@@ -203,6 +206,8 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * @returns true, after handling the button press.
      */
     function onSelect() as Boolean {
+        vibrateStrong();
+
         System.println("Start/stop button registered");
         handleStartStop();
         pressStartButton();
@@ -215,6 +220,8 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * @returns true, after handling the button press according to the app state.
      */
     function onBack() as Boolean {
+        vibrateStrong();
+
         if (!exitAppOnBack()) {
             System.println("Back button pressed with no activity. Closing app.");
             menuDelegate.closeApp();
@@ -316,6 +323,42 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
             // Pause the activity and immediately open the pause menu
             session.stop();
             menuDelegate.pushPauseMenu();
+        }
+    }
+
+    /**
+     * Vibrate with a light vibration pattern.
+     */
+    static function vibrateLight() as Void {
+        if (Attention has :vibrate) {
+            new Attention.VibeProfile(25, 2000);
+        }
+    }
+
+    /**
+     * Vibrate with a normal vibration pattern.
+     */
+    static function vibrate() as Void {
+        if (Attention has :vibrate) {
+            new Attention.VibeProfile(50, 2000);
+        }
+    }
+
+    /**
+     * Vibrate with a strong vibration pattern.
+     */
+    static function vibrateStrong() as Void {
+        if (Attention has :vibrate) {
+            new Attention.VibeProfile(75, 2000);
+        }
+    }
+
+    /**
+     * Vibrate with the maximum vibration pattern.
+     */
+    static function vibrateMax() as Void {
+        if (Attention has :vibrate) {
+            new Attention.VibeProfile(100, 2000);
         }
     }
 }
