@@ -3,10 +3,12 @@ import Toybox.Lang;
 
 class DiscardConfirmDelegate extends WatchUi.Menu2InputDelegate {
     private var _mainDelegate as TrainingBuddyDelegate;
+    private var menuDelegate as MenuDelegate;
 
     function initialize(mainDelegate as TrainingBuddyDelegate) {
         Menu2InputDelegate.initialize();
         _mainDelegate = mainDelegate;
+        menuDelegate = new MenuDelegate(_mainDelegate);
     }
 
     function onBack() {
@@ -18,10 +20,10 @@ class DiscardConfirmDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE); // Remove confirmation menu
 
         if (id.equals("confirm_discard")) {
-            _mainDelegate.discardActivity();
+            menuDelegate.discardActivity();
         } else if (id.equals("cancel_discard")) {
             // return to the pause menu
-            _mainDelegate.pushPauseMenu();
+            menuDelegate.pushPauseMenu();
         }
     }
 }

@@ -3,10 +3,12 @@ import Toybox.Lang;
 
 class PauseMenuDelegate extends WatchUi.Menu2InputDelegate {
     private var _mainDelegate as TrainingBuddyDelegate;
+    private var menuDelegate as MenuDelegate;
 
     function initialize(mainDelegate as TrainingBuddyDelegate) {
         Menu2InputDelegate.initialize();
         _mainDelegate = mainDelegate;
+        menuDelegate = new MenuDelegate(_mainDelegate);
     }
 
     /*
@@ -21,9 +23,9 @@ class PauseMenuDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE); // Remove the pause menu
 
         if (id.equals("resume")) {
-            _mainDelegate.resumeActivity();
+            menuDelegate.resumeActivity();
         } else if (id.equals("save")) {
-            _mainDelegate.saveActivity();
+            menuDelegate.saveActivity();
         } else if (id.equals("discard")) {
             pushDiscardConfirmationMenu();
         }

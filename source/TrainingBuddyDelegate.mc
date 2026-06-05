@@ -17,8 +17,12 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var activityRunning = false;
     private var updateViewTimer = new Timer.Timer();
     private var currentStep = START;
-    private var _session as Session? = null;
+    private var session as Session? = null;
 
+    // menu
+    private var menuDelegate;
+
+    // workout parameters
     private var repetitions = new Repetitions(3, 4);
 
     // the total time of the workout
@@ -33,12 +37,28 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      */
     public function initialize(watchUi as TrainingBuddyView) {
         BehaviorDelegate.initialize();
+        menuDelegate = new MenuDelegate(self);
+
         view = watchUi;
 
         workoutTimer = new WorkoutTimer(PREPARATION_DURATION_IN_SECONDS, method(:workoutTimerCallback));
 
         updateViewTimer.start(method(:timerCallback), TIMER_INTERVAL, true);
         updateView();
+    }
+
+    /*
+     *
+     */
+    public function getSession() as Session? {
+        return session;
+    }
+
+    /*
+     *
+     */
+    public function setSession(session) as Void {
+        session = session;
     }
 
     /**
@@ -128,7 +148,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     /**
      * Implementation for the start button press.
      */
-    private function pressStartButton() as Void {
+    public function pressStartButton() as Void {
         switch (currentStep) {
             case START:
                 System.println("CHANGE TO WARMUP");
@@ -148,11 +168,17 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         updateView();
     }
 
+    /*
+     *
+     */
     function stopTimers() as Void {
         trainingStopwatch.stop();
         workoutTimer.stop();
     }
 
+    /*
+     *
+     */
     function startTimers() as Void {
         trainingStopwatch.start();
         switch(currentStep) {
@@ -171,7 +197,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     function onBack() as Boolean {
         if (!exitAppOnBack()) {
             System.println("Back button pressed with no activity. Closing app.");
-            closeApp();
+            menuDelegate.closeApp();
             return true;
         }
 
@@ -238,10 +264,12 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         workoutTimer.start();
     }
 
-    // Handles the physical BACK button
+    /*
+     * Handle the back button.
+     */
     function exitAppOnBack() as Boolean {
         System.println("Back button pressed.");
-        if (_session == null) {
+        if (session == null) {
             // If no activity is running/created, let the system close the app
             return false; 
         }
@@ -249,60 +277,21 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         return true; 
     }
 
+    /*
+     *
+     */
     private function handleStartStop() as Void {
-        if (_session == null) {
+        if (session == null) {
             // Create and start the activity
-            _session = ActivityRecording.createSession({
+            session = ActivityRecording.createSession({
                 :name => "Strength Training",
                 :sport => selectedActivity
             });
-            _session.start();
-            // view.updateMessage("Recording...");
-        } else if (_session.isRecording()) {
+            session.start();
+        } else if (session.isRecording()) {
             // Pause the activity and immediately open the pause menu
-            _session.stop();
-            // view.updateMessage("Paused");
-            pushPauseMenu();
+            session.stop();
+            menuDelegate.pushPauseMenu();
         }
-    }
-
-    public function pushPauseMenu() as Void {
-        var menu = new WatchUi.Menu2({:title => "Activity Paused"});
-        menu.addItem(new WatchUi.MenuItem("Resume", null, "resume", null));
-        menu.addItem(new WatchUi.MenuItem("Save", null, "save", null));
-        menu.addItem(new WatchUi.MenuItem("Discard", null, "discard", null));
-        
-        WatchUi.pushView(menu, new PauseMenuDelegate(self), WatchUi.SLIDE_UP);
-    }
-
-    // Callbacks from the menus
-    function resumeActivity() as Void {
-        if (_session != null) {
-            _session.start();
-            // _view.updateMessage("Recording...");
-        }
-        pressStartButton();
-    }
-
-    function saveActivity() as Void {
-        if (_session != null) {
-            _session.save();
-            _session = null;
-            closeApp();
-            // _view.updateMessage("Saved!\nPress START");
-        }
-    }
-
-    function discardActivity() as Void {
-        if (_session != null) {
-            _session.discard();
-            _session = null;
-            closeApp();
-            // _view.updateMessage("Discarded.\nPress START");
-        }
-    }
-
-    function closeApp() as Void {
-        WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }
 }
