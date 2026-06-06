@@ -1,6 +1,7 @@
+import Toybox.ActivityRecording;
+import Toybox.Attention;
 import Toybox.Lang;
 import Toybox.Timer;
-import Toybox.ActivityRecording;
 import Toybox.WatchUi;
 
 using Toybox.Time.Gregorian;
@@ -77,6 +78,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * The callback function for the workout timer to trigger the next step of the workout.
      */
     function workoutTimerCallback() as Void {
+        VibrationProfiles.vibrateStrong();
         switch(currentStep) {
             case PREPARE:
                 onPreparationDone();
@@ -100,8 +102,10 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 view.updateIntervalTimer("Press START");
                 break;
             case WARMUP:
-            case COOLDOWN:
                 view.updateIntervalTimer("Press LAP");
+                break;
+            case COOLDOWN:
+                view.updateIntervalTimer("Press STOP");
                 break;
             default:
                 view.updateIntervalTimer(workoutTimer.getRemainingTimeString());
@@ -113,53 +117,13 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     }
 
     /**
-     * A key event was triggered.
-     *
-     * @returns true, if the button press was implemented. False otherwise.
-     */
-    public function onKey(keyEvent) as Boolean {
-        switch(keyEvent.getKey()) {
-            // Start/stop button
-            case KEY_ENTER:
-            // Back/lap key
-            case KEY_ESC:
-                System.println("Back/lap key registered");
-                // pressLapButton();
-                break;
-            // Menu event
-            case KEY_MENU:
-                System.println("Menu press registered");
-                break;
-            // down key
-            case KEY_DOWN:
-                System.println("Key down registered");
-                break;
-            // up key
-            case KEY_UP:
-                System.println("Key up registered");
-                break;
-            // unimplemented key event
-            default: 
-                System.print("Unregistered key event: Key = ");
-                System.print(keyEvent.getKey());  // e.g. KEY_MENU = 7
-                System.print(" - Type = ");
-                System.println(keyEvent.getType()); // e.g. PRESS_TYPE_DOWN = 0
-                return false;
-        }
-        return true;
-    }
-
-    /**
      * Implementation for the start button press.
      */
     public function pressStartButton() as Void {
         switch (currentStep) {
             case START:
-                System.println("CHANGE TO WARMUP");
                 currentStep = WARMUP;
                 break;
-            default:
-                System.println("current step = " + currentStep);
         }
 
         if (session == null) {
@@ -203,7 +167,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * @returns true, after handling the button press.
      */
     function onSelect() as Boolean {
-        System.println("Start/stop button registered");
+        VibrationProfiles.vibrateStrong();
         handleStartStop();
         pressStartButton();
         return true;
@@ -215,18 +179,18 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * @returns true, after handling the button press according to the app state.
      */
     function onBack() as Boolean {
+        // exit the app if no session was created yet
         if (!exitAppOnBack()) {
-            System.println("Back button pressed with no activity. Closing app.");
+            VibrationProfiles.vibrateMed();
             menuDelegate.closeApp();
             return true;
         }
 
         if (!session.isRecording()) {
-            System.println("Lap button pressed but no activity is running. Ignoring.");
             return true;
         }
 
-        System.println("Lap button pressed. Current step = " + currentStep);
+        VibrationProfiles.vibrateStrong();
 
         switch(currentStep) {
             case START:
@@ -265,7 +229,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 break;
 
             default:
-                System.println("Invalid step: " + currentStep);
         }
 
         return true;
@@ -291,7 +254,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      *          and the back button should close the app.
      */
     function exitAppOnBack() as Boolean {
-        System.println("Back button pressed.");
         if (session == null) {
             // If no activity is running/created, let the system close the app
             return false; 
