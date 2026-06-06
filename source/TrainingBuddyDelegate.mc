@@ -122,11 +122,8 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     public function pressStartButton() as Void {
         switch (currentStep) {
             case START:
-                System.println("CHANGE TO WARMUP");
                 currentStep = WARMUP;
                 break;
-            default:
-                System.println("current step = " + currentStep);
         }
 
         if (session == null) {
@@ -190,7 +187,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
         }
 
         if (!session.isRecording()) {
-            System.println("Lap button pressed but no activity is running. Ignoring.");
             return true;
         }
 
@@ -233,7 +229,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 break;
 
             default:
-                System.println("Invalid step: " + currentStep);
         }
 
         return true;
@@ -259,7 +254,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      *          and the back button should close the app.
      */
     function exitAppOnBack() as Boolean {
-        System.println("Back button pressed.");
         if (session == null) {
             // If no activity is running/created, let the system close the app
             return false; 
