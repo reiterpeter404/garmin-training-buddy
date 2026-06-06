@@ -78,6 +78,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * The callback function for the workout timer to trigger the next step of the workout.
      */
     function workoutTimerCallback() as Void {
+        VibrationProfiles.vibrateStrong();
         switch(currentStep) {
             case PREPARE:
                 onPreparationDone();
@@ -206,9 +207,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * @returns true, after handling the button press.
      */
     function onSelect() as Boolean {
-        vibrateStrong();
-
-        System.println("Start/stop button registered");
+        VibrationProfiles.vibrateStrong();
         handleStartStop();
         pressStartButton();
         return true;
@@ -220,10 +219,9 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
      * @returns true, after handling the button press according to the app state.
      */
     function onBack() as Boolean {
-        vibrateStrong();
-
+        // exit the app if no session was created yet
         if (!exitAppOnBack()) {
-            System.println("Back button pressed with no activity. Closing app.");
+            VibrationProfiles.vibrateMed();
             menuDelegate.closeApp();
             return true;
         }
@@ -233,7 +231,7 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
             return true;
         }
 
-        System.println("Lap button pressed. Current step = " + currentStep);
+        VibrationProfiles.vibrateStrong();
 
         switch(currentStep) {
             case START:
@@ -323,42 +321,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
             // Pause the activity and immediately open the pause menu
             session.stop();
             menuDelegate.pushPauseMenu();
-        }
-    }
-
-    /**
-     * Vibrate with a light vibration pattern.
-     */
-    static function vibrateLight() as Void {
-        if (Attention has :vibrate) {
-            new Attention.VibeProfile(25, 2000);
-        }
-    }
-
-    /**
-     * Vibrate with a normal vibration pattern.
-     */
-    static function vibrate() as Void {
-        if (Attention has :vibrate) {
-            new Attention.VibeProfile(50, 2000);
-        }
-    }
-
-    /**
-     * Vibrate with a strong vibration pattern.
-     */
-    static function vibrateStrong() as Void {
-        if (Attention has :vibrate) {
-            new Attention.VibeProfile(75, 2000);
-        }
-    }
-
-    /**
-     * Vibrate with the maximum vibration pattern.
-     */
-    static function vibrateMax() as Void {
-        if (Attention has :vibrate) {
-            new Attention.VibeProfile(100, 2000);
         }
     }
 }

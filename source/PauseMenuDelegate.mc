@@ -25,6 +25,8 @@ class PauseMenuDelegate extends WatchUi.Menu2InputDelegate {
      * Handle the selection of a menu item.
      */
     function onSelect(item as MenuItem) as Void {
+        VibrationProfiles.vibrateStrong();
+
         var id = item.getId() as String;
         WatchUi.popView(WatchUi.SLIDE_IMMEDIATE); // Remove the pause menu
 
