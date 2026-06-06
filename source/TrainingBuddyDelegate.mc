@@ -102,8 +102,10 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                 view.updateIntervalTimer("Press START");
                 break;
             case WARMUP:
-            case COOLDOWN:
                 view.updateIntervalTimer("Press LAP");
+                break;
+            case COOLDOWN:
+                view.updateIntervalTimer("Press STOP");
                 break;
             default:
                 view.updateIntervalTimer(workoutTimer.getRemainingTimeString());
