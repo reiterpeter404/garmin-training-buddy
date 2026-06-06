@@ -18,8 +18,9 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     private var view as TrainingBuddyView;
 
     // workout parameters
-    private var trainingName = "Strength Training";
-    private var selectedActivity = Activity.SPORT_TRAINING;
+    private var trainingName = "Interval Training";
+    private var activity = Activity.SPORT_TRAINING;
+    private var subActivity = Activity.SUB_SPORT_STRENGTH_TRAINING;
     private var repetitions = new Repetitions(3, 4);
 
     // internal workout states
@@ -219,7 +220,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
                     currentStep = EXERCISE;
                     workoutTimer.reset();
                     workoutTimer.start();
-                    workoutTimer.start();
                 }
 
                 break;
@@ -271,7 +271,8 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
             // Create and start the activity
             session = ActivityRecording.createSession({
                 :name => trainingName,
-                :sport => selectedActivity
+                :sport => activity,
+                :subSport => subActivity
             });
             session.start();
         } else if (session.isRecording()) {
