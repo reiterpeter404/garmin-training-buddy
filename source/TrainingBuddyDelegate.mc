@@ -117,45 +117,6 @@ class TrainingBuddyDelegate extends WatchUi.BehaviorDelegate {
     }
 
     /**
-     * A key event was triggered.
-     *
-     * @returns true, if the button press was implemented. False otherwise.
-     */
-    public function onKey(keyEvent) as Boolean {
-        vibrateStrong();
-
-        switch(keyEvent.getKey()) {
-            // Start/stop button
-            case KEY_ENTER:
-            // Back/lap key
-            case KEY_ESC:
-                System.println("Back/lap key registered");
-                // pressLapButton();
-                break;
-            // Menu event
-            case KEY_MENU:
-                System.println("Menu press registered");
-                break;
-            // down key
-            case KEY_DOWN:
-                System.println("Key down registered");
-                break;
-            // up key
-            case KEY_UP:
-                System.println("Key up registered");
-                break;
-            // unimplemented key event
-            default: 
-                System.print("Unregistered key event: Key = ");
-                System.print(keyEvent.getKey());  // e.g. KEY_MENU = 7
-                System.print(" - Type = ");
-                System.println(keyEvent.getType()); // e.g. PRESS_TYPE_DOWN = 0
-                return false;
-        }
-        return true;
-    }
-
-    /**
      * Implementation for the start button press.
      */
     public function pressStartButton() as Void {
